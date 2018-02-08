@@ -33,8 +33,8 @@ class Trivia:
         await ctx.send('Trivia Started!')
         await ctx.send(f'What is the chemical composition for {rand_key}?')
 
+        # Collect messages
         while True:
-        """Collect the messages"""
             try:
                 message = await self.bot.wait_for('on_message', timeout=30.0)
             except asyncio.TimeoutError:
