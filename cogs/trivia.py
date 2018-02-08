@@ -33,12 +33,16 @@ class Trivia:
         await ctx.send('Trivia Started!')
         await ctx.send(f'What is the chemical composition for {rand_key}?')
 
-        async def on_message(message):
-            """Collect the messages"""
+        while True:
+        """Collect the messages"""
+            try:
+                message = await self.bot.wait_for('on_message', timeout=30.0)
+            except asyncio.TimeoutError:
+                return await ctx.send(f"Time's up! The answer was `{answer}`.")
+
             if message.content == answer:
                 return await ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')
-            else:
-                await ctx.send('nah')
+
 
 def setup(bot):
     bot.add_cog(Trivia(bot))
