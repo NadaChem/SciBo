@@ -30,6 +30,9 @@ class Trivia:
         rand_key = random.choice(list(self.CHEM_DATA))
         answer = self.CHEM_DATA[rand_key]
 
+        await ctx.send('Trivia Started!')
+        await ctx.send(f'What is the chemical composition for {rand_key}?')
+
         async def on_message(message):
             """Collect the messages"""
             if message.content == answer:
