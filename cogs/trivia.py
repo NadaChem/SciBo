@@ -42,6 +42,8 @@ class Trivia:
 
             if message.content == answer:
                 return await ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')
+            else:
+                await ctx.send(f'You said: `{message.content}`.')
 
 
 def setup(bot):
