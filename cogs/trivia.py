@@ -14,7 +14,7 @@ class Trivia:
 
         CHEM_DATA (Dict[str, str]): Chemical name -> notation
     """
-    with open('../data/chem.json') as f:
+    with open('data/chem.json') as f:
         CHEM_DATA = json.load(f)
 
     def __init__(self, bot):
