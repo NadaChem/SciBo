@@ -37,6 +37,8 @@ class Trivia:
             """Collect the messages"""
             if message.content == answer:
                 return await ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')
+            else:
+                await ctx.send('nah')
 
 def setup(bot):
     bot.add_cog(Trivia(bot))
