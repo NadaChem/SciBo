@@ -36,7 +36,7 @@ class Trivia:
         # Collect messages
         while True:
             try:
-                message = await self.bot.wait_for('on_message', timeout=30.0)
+                message = await self.bot.wait_for('message', timeout=30.0)
             except asyncio.TimeoutError:
                 return await ctx.send(f"Time's up! The answer was `{answer}`.")
 
