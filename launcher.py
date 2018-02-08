@@ -1,6 +1,6 @@
 #!/bin/env python3
 
-from bot import SciBot
+from bot import SciBo
 
 
 if __name__ == '__main__':
