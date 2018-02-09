@@ -1,7 +1,7 @@
 import json
-import traceback 
-
+import traceback
 from datetime import datetime
+
 from discord.ext import commands
 
 
@@ -9,6 +9,10 @@ class SciBo(commands.Bot):
     """Holds some info and junk"""
     with open('data/chem.json') as f:
         CHEM_DATA = json.load(f)
+
+    # The idea here is to store :class:`Game` objects in here
+    # to see whether a guild already has a trivia game running
+    RUNNING_GAMES = []
 
     def __init__(self):
         self.description = 'A scientific bot that does science-y things'

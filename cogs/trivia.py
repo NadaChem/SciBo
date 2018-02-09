@@ -1,45 +1,41 @@
-import asyncio
-import json
-import random
-
 from discord.ext import commands
-from typing import Dict
+
+from utils.trivia_game import Game
 
 
 class Trivia:
-    """A guessing game based on chemical formulas.
-    
-    Attributes:
-        bot (commands.Bot): the bot
-    """
-    def __init__(self, bot):
-        self.bot = bot
-        self.CHEM_DATA = bot.CHEM_DATA
+    """A guessing game based on chemical formulas."""
 
-    @commands.command()
+    @commands.group(invoke_without_subcommand=True)
     async def trivia(self, ctx):
         """Start a guessing game for chemical compositions.
 
         SciBo will ask you the chemical notation for a random chemical.
         If you guess it, you get a point!
         """
-        rand_key = random.choice(list(self.CHEM_DATA))
-        answer = self.CHEM_DATA[rand_key]
+        if ctx.invoked_subcommand is None:
+            return await ctx.invoke(ctx.bot.get_command('trivia start'))
 
-        await ctx.send('Trivia Started!')
-        await ctx.send(f'What is the chemical composition for {rand_key}?')
+    @trivia.command(name='start')
+    async def _start(self, ctx, limit: int = None):
+        """Starts chemically induced trivia."""
+        # Make sure only one game is running per guild
+        current_game = Game(ctx, limit=limit)
+        if current_game in ctx.bot.RUNNING_GAMES:
+            return await ctx.send('A game is already running.')
 
-        # Collect messages
-        while True:
-            try:
-                message = await self.bot.wait_for('message', timeout=30.0)
-            except asyncio.TimeoutError:
-                return await ctx.send(f"Time's up! The answer was `{answer}`.")
+        if limit:
+            return await ctx.send(f'Trivia Started! ({limit} question(s))')
 
-            if message.content == answer:
-                return await ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')
-            else:
-                await ctx.send(f'You said: `{message.content}`.')
+        await ctx.send('Trivia Started! (No limit)')
+
+
+    @trivia.command(name='stop')
+    async def _stop(self, ctx):
+        """Stops trivia."""
+        # TODO:
+        # How to get _stop() to reference current_game in _start
+        pass
 
 
 def setup(bot):
