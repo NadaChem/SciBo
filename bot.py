@@ -1,6 +1,7 @@
 import json
 import traceback
 from datetime import datetime
+from pathlib import Path
 
 from discord.ext import commands
 
@@ -17,11 +18,13 @@ class SciBo(commands.Bot):
     def __init__(self):
         self.description = 'A scientific bot that does science-y things'
         self.start_time = datetime.now()
-        self.startup_cogs = ['trivia']
+        self.startup_cogs = [x.stem for x in Path('cogs').glob('*.py')]
         with open('data/keys.json') as f:
             self.token = json.load(f)['discord']
 
-        super().__init__(command_prefix='sci>', description=self.description, pm_help=None)
+        prefixes = ["sci>", "SciBo "]
+        super().__init__(command_prefix=commands.when_mentioned_or(*prefixes), description=self.description,
+                         pm_help=None)
 
     def run(self):
         super().run(self.token)
