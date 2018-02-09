@@ -11,14 +11,10 @@ class Trivia:
     
     Attributes:
         bot (commands.Bot): the bot
-
-        CHEM_DATA (Dict[str, str]): Chemical name -> notation
     """
-    with open('data/chem.json') as f:
-        CHEM_DATA = json.load(f)
-
     def __init__(self, bot):
         self.bot = bot
+        self.CHEM_DATA = bot.CHEM_DATA
 
     @commands.command()
     async def trivia(self, ctx):

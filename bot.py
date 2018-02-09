@@ -6,6 +6,10 @@ from discord.ext import commands
 
 
 class SciBo(commands.Bot):
+    """Holds some info and junk"""
+    with open('data/chem.json') as f:
+        CHEM_DATA = json.load(f)
+
     def __init__(self):
         self.description = 'A scientific bot that does science-y things'
         self.start_time = datetime.now()
