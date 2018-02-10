@@ -16,7 +16,7 @@ class Game:
 
     async def trivia_task(self):
         while not self.bot.is_closed():
-            rand_key = random.choice(list(self.CHEM_DATA))
+            rand_key = random.choice(list(self.bot.CHEM_DATA))
             answer = self.bot.CHEM_DATA[rand_key]
 
             await self.ctx.send(f"What is the chemical composition for `{rand_key}`? You've got 30 seconds.")
@@ -36,12 +36,12 @@ class Game:
             # Increment the question counter
             self.count += 1
             if self.count > self.limit:
-                return self._stop()
+                return self.stop()
 
             await self.ctx.send('Next question in 10 seconds!')
             await asyncio.sleep(10)
 
-    async def _stop(self):
+    async def stop(self):
         if not self.task.cancelled():
             await self.ctx.send(f"Fun's over! You answered {self.count} questions.")
             return self.task.cancel()

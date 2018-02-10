@@ -13,7 +13,7 @@ class SciBo(commands.Bot):
 
     # The idea here is to store :class:`Game` objects in here
     # to see whether a guild already has a trivia game running
-    RUNNING_GAMES = []
+    RUNNING_GAMES = {}
 
     def __init__(self):
         self.description = 'A scientific bot that does science-y things'
