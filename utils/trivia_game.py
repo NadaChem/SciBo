@@ -45,7 +45,7 @@ class Game:
 
             # Collect messages
             while True:
-                message = await self.bot.wait_for('message')
+                message = await self.bot.wait_for('on_message', timeout=None)
 
                 if message.content.lower() == answer.lower():
                     await self.ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')

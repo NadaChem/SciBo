@@ -41,8 +41,3 @@ class SciBo(commands.Bot):
 
         print(f'Client {self.user.name} logged in at {self.start_time}.')
         print('--------------------------------------------------------')
-    
-    async def on_message(self, message):
-        if message.author.bot:
-            return
-        await bot.process_commands(message)
