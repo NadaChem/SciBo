@@ -50,6 +50,9 @@ class Game:
                 if message.content.lower() == answer.lower():
                     await self.ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')
                     break
+                elif message.content.lower() in ['forfeit', 'skip question']:
+                    await self.ctx.send(f'You gave up! {message.author.mention}. The answer was `{answer}`.')
+                    break
 
                 # Actually time for 30 seconds
                 if time.time() - start_time > 30:
