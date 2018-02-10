@@ -41,4 +41,4 @@ class Trivia:
 
 
 def setup(bot):
-    bot.add_cog(Trivia)
+    bot.add_cog(Trivia())
