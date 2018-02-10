@@ -27,7 +27,6 @@ class Game:
                     message = await self.bot.wait_for('message', timeout=30.0)
                 except asyncio.TimeoutError:
                     await self.ctx.send(f"Time's up! The answer was `{answer}`.")
-                    break
 
                 if message.content == answer:
                     await self.ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')
