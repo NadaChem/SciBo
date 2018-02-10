@@ -37,7 +37,7 @@ class SciBo(commands.Bot):
                 print(f'Failed to load {ext}.')
                 traceback.print_exc()
             else:
-                print(f'Loaded extension: {ext}.', end='\r')
+                print(f'Loaded extension: {ext}.')
 
         print(f'Client {self.user.name} logged in at {self.start_time}.')
         print('--------------------------------------------------------')
