@@ -71,7 +71,7 @@ class Game:
     async def stop(self):
         """Stops the asyncio trivia task"""
         if not self.task.cancelled():
-            await self.ctx.send(f"Fun's over! You answered {self.count} questions.")
+            await self.ctx.send(f"Fun's over! You answered `{self.count}` question(s).")
             return self.task.cancel()
 
         await self.ctx.send("You don't have any active games running.")
