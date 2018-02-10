@@ -40,11 +40,6 @@ class Trivia:
         await ctx.bot.RUNNING_GAMES[ctx.guild.id].stop()
         del ctx.bot.RUNNING_GAMES[ctx.guild.id]
 
-    @commands.command()
-    async def stop(self, ctx):
-        """Alias for `<prefix> trivia stop`"""
-        await ctx.invoke(ctx.bot.get_command('trivia stop'))
-
 
 def setup(bot):
     bot.add_cog(Trivia())
