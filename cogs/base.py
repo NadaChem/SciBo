@@ -1,4 +1,6 @@
 import discord
+
+from datetime import datetime
 from discord.ext import commands
 
 
@@ -11,8 +13,10 @@ class Base:
         em = discord.Embed(title='SciBo Info')
         em.description = ctx.bot.description
         em.set_thumbnail(url=ctx.bot.user.avatar_url_as(format='png', size=128))
-        em.add_field(name='Commands', value='\u2022'.join(sorted([f'{x.name}\n' for x in ctx.bot.commands])))
-        em.add_field(name='Prefixes', value='\u2022'.join([f'{x}\n' for x in ctx.bot.prefixes]))
+        em.add_field(name='Commands', value='\n'.join(sorted([f'\u2022 {x.name}' for x in ctx.bot.commands])))
+        em.add_field(name='Prefixes', value='\n'.join([f'\u2022 {x}' for x in ctx.bot.prefixes]))
+        em.add_field(name='Uptime', value=str(datetime.now() - ctx.bot.start_time))
+        em.add_field(name='Owners', value='\n'.join(['\u2022 naught0#4417', '\u2022 NCPlayz#7941']))
 
         await ctx.send(embed=em)
 
