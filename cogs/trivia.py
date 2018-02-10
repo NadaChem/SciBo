@@ -6,7 +6,7 @@ from utils.trivia_game import Game
 class Trivia:
     """A guessing game based on chemical formulas."""
 
-    @commands.group(invoke_without_command=True)
+    @commands.group(invoke_without_command=True, aliases=['tri', 't'])
     async def trivia(self, ctx):
         """Start a guessing game for chemical compositions.
 
@@ -39,6 +39,13 @@ class Trivia:
 
         await ctx.bot.RUNNING_GAMES[ctx.guild.id].stop()
         del ctx.bot.RUNNING_GAMES[ctx.guild.id]
+
+    @trivia.command()
+    async def skip(self, ctx):
+        if ctx.guild.id not in ctx.bot.RUNNING_GAMES:
+            return await ctx.send("This server doesn't have a game running right now.")
+
+        await ctx.bot.RUNNING_GAMES[ctx.guild.id].skip()
 
 
 def setup(bot):

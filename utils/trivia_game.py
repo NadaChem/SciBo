@@ -17,6 +17,7 @@ class Game:
         count: A running tally of how many questions have been asked
         limit: The # of questions to be asked in total (can be None for unlimited)
         task: :meth:`trivia_task`
+        skip (bool): whether to skip a question.
 
     Args:
         ctx: The context in which the command was called (passed from the cog)
@@ -31,6 +32,7 @@ class Game:
         self.count = 0
         self.limit = limit
         self.task = self.loop.create_task(self.trivia_task())
+        self.skip_question = False
 
     async def trivia_task(self):
         """The trivia task.
@@ -44,20 +46,20 @@ class Game:
             start_time = time.time()
 
             # Collect messages
-            while True:
+            while not self.skip_question:
                 message = await self.bot.wait_for('message', timeout=None)
 
                 if message.content.lower() == answer.lower():
                     await self.ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')
-                    break
-                elif message.content.lower() in ['forfeit', 'skip question']:
-                    await self.ctx.send(f'You gave up! {message.author.mention}. The answer was `{answer}`.')
                     break
 
                 # Actually time for 30 seconds
                 if time.time() - start_time > 30:
                     await self.ctx.send(f"Time's up! The answer was `{answer}`.")
                     break
+            else:
+                await self.ctx.send(f'Question skipped.')
+                self.skip_question = False
 
             # Increment the question counter
             self.count += 1
@@ -70,6 +72,10 @@ class Game:
 
             await self.ctx.send('Next question in 10 seconds!')
             await asyncio.sleep(10)
+
+    async def skip(self):
+        """Skips a trivia question."""
+        self.skip_question = True
 
     async def stop(self):
         """Stops the asyncio trivia task"""
