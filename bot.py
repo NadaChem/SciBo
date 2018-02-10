@@ -22,7 +22,7 @@ class SciBo(commands.Bot):
         with open('data/keys.json') as f:
             self.token = json.load(f)['discord']
 
-        prefixes = ["sci>", "SciBo "]
+        self.prefixes = ["sci>", "SciBo "]
         super().__init__(command_prefix=commands.when_mentioned_or(*prefixes), description=self.description,
                          pm_help=None)
 
