@@ -56,7 +56,7 @@ class Game:
             # Increment the question counter
             self.count += 1
             if self.limit is not None:
-                if self.count is > self.limit:
+                if self.count > self.limit:
                     return self.stop()
 
             # Less spammy
