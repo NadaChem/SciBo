@@ -6,14 +6,15 @@ from utils.trivia_game import Game
 class Trivia:
     """A guessing game based on chemical formulas."""
 
-    @commands.group()
+    @commands.group(invoke_without_command=True)
     async def trivia(self, ctx):
         """Start a guessing game for chemical compositions.
 
         SciBo will ask you the chemical notation for a random chemical.
         If you guess it, you get a point!
         """
-        pass
+        if ctx.invoked_subcommand is None:
+            return await ctx.invoke(ctx.bot.get_command('trivia start'))
 
     @trivia.command()
     async def start(self, ctx, limit: int = None):
