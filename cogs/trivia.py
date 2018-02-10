@@ -20,9 +20,10 @@ class Trivia:
     async def start(self, ctx, limit: int = None):
         """Starts chemically induced trivia."""
         # Make sure only one game is running per guild
-        current_game = Game(ctx, limit=limit)
         if current_game.guild_id in ctx.bot.RUNNING_GAMES:
             return await ctx.send('A game is already running.')
+
+        current_game = Game(ctx, limit=limit)
         ctx.bot.RUNNING_GAMES[ctx.guild.id] = current_game
 
         if limit:
