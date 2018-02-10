@@ -1,5 +1,6 @@
 import asyncio
 import random
+import time
 
 from typing import Union
 
@@ -40,17 +41,19 @@ class Game:
             answer = self.bot.CHEM_DATA[rand_key]
 
             await self.ctx.send(f"What is the chemical composition for `{rand_key}`? You've got 30 seconds.")
+            start_time = time.time()
 
             # Collect messages
             while True:
-                try:
-                    message = await self.bot.wait_for('message', timeout=30.0)
-                except asyncio.TimeoutError:
-                    await self.ctx.send(f"Time's up! The answer was `{answer}`.")
+                message = await self.bot.wait_for('message')
+
+                if message.content.lower() == answer.lower():
+                    await self.ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')
                     break
 
-                if message.content == answer:
-                    await self.ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')
+                # Actually time for 30 seconds
+                if time.time() - start_time > 30:
+                    await self.ctx.send(f"Time's up! The answer was `{answer}`.")
                     break
 
             # Increment the question counter
@@ -62,9 +65,6 @@ class Game:
             # Less spammy
             await asyncio.sleep(3)
 
-            # TODO:
-            # This portion isn't being reached
-            # I believe it has something to do with the break statements above
             await self.ctx.send('Next question in 10 seconds!')
             await asyncio.sleep(10)
 
