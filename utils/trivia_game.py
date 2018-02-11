@@ -17,7 +17,7 @@ class Game:
         count: A running tally of how many questions have been asked
         limit: The # of questions to be asked in total (can be None for unlimited)
         task: :meth:`trivia_task`
-        skip (bool): whether to skip a question.
+        skipped_question (bool): whether to skip a question.
 
     Args:
         ctx: The context in which the command was called (passed from the cog)
@@ -32,6 +32,7 @@ class Game:
         self.count = 0
         self.limit = limit
         self.task = self.loop.create_task(self.trivia_task())
+        self.answer = None
         self.skip_question = False
 
     async def trivia_task(self):
@@ -40,26 +41,13 @@ class Game:
         Exits if stop() is called, or if the limit of the game is reached."""
         while not self.bot.is_closed():
             rand_key = random.choice(list(self.bot.CHEM_DATA))
-            answer = self.bot.CHEM_DATA[rand_key]
+            self.answer = self.bot.CHEM_DATA[rand_key]
 
             await self.ctx.send(f"What is the chemical composition for `{rand_key}`? You've got 30 seconds.")
             start_time = time.time()
 
             # Collect messages
-            while not self.skip_question:
-                message = await self.bot.wait_for('message', timeout=None)
-
-                if message.content.lower() == answer.lower():
-                    await self.ctx.send(f'Correct! {message.author.mention}. The answer was `{answer}`.')
-                    break
-
-                # Actually time for 30 seconds
-                if time.time() - start_time > 30:
-                    await self.ctx.send(f"Time's up! The answer was `{answer}`.")
-                    break
-            else:
-                await self.ctx.send(f'Question skipped.')
-                self.skip_question = False
+            await self.get_input(start_time)
 
             # Increment the question counter
             self.count += 1
@@ -73,10 +61,6 @@ class Game:
             await self.ctx.send('Next question in 10 seconds!')
             await asyncio.sleep(10)
 
-    async def skip(self):
-        """Skips a trivia question."""
-        self.skip_question = True
-
     async def stop(self):
         """Stops the asyncio trivia task"""
         if not self.task.cancelled():
@@ -85,6 +69,35 @@ class Game:
 
         await self.ctx.send("You don't have any active games running.")
         raise asyncio.CancelledError(f'Game for guild {self.guild_id} has already stopped.')
+
+    def check(self, message):
+        if message.channel != self.ctx.channel:
+            return False
+
+        if message.author.bot:
+            return False
+
+        lowered = message.content.lower()
+        if lowered == 'skip':
+            self.skip_question = True
+
+        return True
+
+    async def get_input(self, start_time):
+        while True:
+            message = await self.bot.wait_for('message', check=self.check)
+
+            if self.skip_question:
+                await self.ctx.send(f'Skipped! The answer was `{self.answer}`')
+                break
+
+            if message.lower() == self.answer.lower():
+                await self.ctx.send(f'Correct! {message.author.mention} The answer was `{self.answer}`.')
+                break
+
+            if time.time() - start_time > 30:
+                await self.ctx.send(f"Time's up! The answer was `{self.answer}`.")
+                break
 
     def __repr__(self) -> str:
         return '<Guild id={0.guild_id!r} limit={0.limit!r}>'.format(self)
