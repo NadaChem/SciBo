@@ -61,10 +61,6 @@ class Game:
             await self.ctx.send('Next question in 10 seconds!')
             await asyncio.sleep(10)
 
-    async def skip(self):
-        """Skips a trivia question."""
-        self.skip_question = True
-
     async def stop(self):
         """Stops the asyncio trivia task"""
         if not self.task.cancelled():
