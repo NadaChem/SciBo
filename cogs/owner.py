@@ -79,7 +79,7 @@ class Owner:
             if not isinstance(result, str):
                 result = repr(result) if result is not None else 'No Result'
 
-        e = discord.Embed(name='Eval')
+        e = discord.Embed(name='Eval', colour=discord.Colour.blurple())
         e.add_field(name='Input:', value=f'```py\n{body}```')
         e.add_field(name='Output:', value=f'```py\n{result}```')
         msg = await ctx.send(embed=e)
@@ -88,10 +88,16 @@ class Owner:
         await msg.edit(embed=e)
 
     @commands.command(name='sh', typing=True)
-    async def shell(self, ctx: commands.Context, *, cmd: no_codeblock):
+    async def shell(self, ctx, *, cmd: no_codeblock):
         """Run a subprocess using shell."""
         result = await shell(cmd)
-        await ctx.send(f'```{result}```')
+        e = discord.Embed(name='Shell', colour=discord.Colour.blurple())
+        e.add_field(name='Input:', value=f'```py\n{cmd}```')
+        e.add_field(name='Output:', value=f'```py\n{result}```')
+        msg = await ctx.send(embed=e)
+        await asyncio.sleep(10)
+        e.remove_field(0)
+        await msg.edit(embed=e)
 
 
 def setup(bot):
