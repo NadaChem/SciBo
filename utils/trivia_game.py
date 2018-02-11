@@ -77,8 +77,7 @@ class Game:
         if message.author.bot:
             return False
 
-        lowered = message.content.lower()
-        if lowered == 'skip':
+        if message.content.lower() == 'skip':
             self.skip_question = True
 
         return True
