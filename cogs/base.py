@@ -1,7 +1,7 @@
 import discord
+from discord.ext import commands
 
 from datetime import datetime
-from discord.ext import commands
 
 
 class Base:
@@ -10,7 +10,7 @@ class Base:
     @commands.command()
     async def info(self, ctx):
         """Get basic information about SciBo"""
-        em = discord.Embed(title='SciBo Info')
+        em = discord.Embed(title='SciBo Info', colour=discord.Colour.blurple())
         em.description = ctx.bot.description
         em.set_thumbnail(url=ctx.bot.user.avatar_url_as(format='png', size=128))
         em.add_field(name='Commands', value='\n'.join(sorted([f'\u2022 {x.name}' for x in ctx.bot.commands if not x.hidden])))

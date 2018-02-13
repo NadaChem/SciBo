@@ -1,11 +1,11 @@
-import asyncio
-import traceback
-import inspect
-
 import discord
-
 from discord.ext import commands
+import asyncio
+
 from utils.misc import shell, no_codeblock
+from io import StringIO
+import contextlib
+import traceback
 
 
 class Owner:
@@ -32,9 +32,9 @@ class Owner:
         try:
             ctx.bot.load_extension(_module)
         except Exception as e:
-            await ctx.send(f'```py\n{traceback.format_exc()}\n```')
+            await ctx.send(str(e).capitalize())
         else:
-            await ctx.send('\N{OK HAND SIGN}')
+            await ctx.message.add_reaction('\N{OK HAND SIGN}')
 
     @commands.command(hidden=True)
     async def unload(self, ctx, *, _module):
@@ -42,48 +42,59 @@ class Owner:
         try:
             ctx.bot.unload_extension(_module)
         except Exception as e:
-            await ctx.send(f'```py\n{traceback.format_exc()}\n```')
+            await ctx.send(str(e).capitalize())
         else:
-            await ctx.send('\N{OK HAND SIGN}')
+            await ctx.message.add_reaction('\N{OK HAND SIGN}')
 
     @commands.command(name='reload', hidden=True)
     async def _reload(self, ctx, *, _module):
         """Reloads a module."""
+        _module = f'cogs.{_module}'
         try:
             ctx.bot.unload_extension(_module)
             ctx.bot.load_extension(_module)
         except Exception as e:
-            await ctx.send(f'```py\n{traceback.format_exc()}\n```')
+            await ctx.send(str(e).capitalize())
         else:
-            await ctx.send('\N{OK HAND SIGN}')
+            await ctx.message.add_reaction('\N{OK HAND SIGN}')
 
     @commands.command(name='eval')
-    async def _eval(self, ctx, *, body: no_codeblock):
-        """Evaluates code
-        Credits: Rapptz/RoboDanny"""
+    async def _eval(self, ctx, *, code: no_codeblock):
+        """Evaluates code"""
 
-        env = {
-            'bot': ctx.bot,
-            'ctx': ctx,
-            'channel': ctx.channel,
-            'guild': ctx.guild,
-            'message': ctx.message,
-            'prefix': ctx.prefix
-        }
+        code = code.lstrip("`").rstrip("`")
+        lines = code.split("\n")
+        lines = ["    " + i for i in lines]
+        lines = '\n'.join(lines)
+
+        f_code = f"async def _():\n{lines}"
+        stdout = StringIO()
 
         try:
-            result = eval(body, env)
-            if inspect.isawaitable(result):
-                result = await result
+            namespace = {
+                "ctx": ctx,
+                "message": ctx.message,
+                "guild": ctx.message.guild,
+                "channel": ctx.message.channel,
+                "author": ctx.message.author,
+                "bot": ctx.bot
+            }
+            exec(f_code, namespace, namespace)
+            func = namespace["_"]
+
+            with contextlib.redirect_stdout(stdout):
+                result = await func()
+
         except Exception as e:
-            result = str(e)
-        else:
-            if not isinstance(result, str):
-                result = repr(result) if result is not None else 'No Result'
+            result = ''.join(traceback.format_exception(None, e, e.__traceback__))
+        finally:
+            stdout.seek(0)
+
+        fmt = f"{stdout.read()}\n{result}\n"
 
         e = discord.Embed(name='Eval', colour=discord.Colour.blurple())
-        e.add_field(name='Input:', value=f'```py\n{body}```')
-        e.add_field(name='Output:', value=f'```py\n{result}```')
+        e.add_field(name='Input:', value=f'```py\n{code}```')
+        e.add_field(name='Output:', value=f'```py\n{fmt}```')
         msg = await ctx.send(embed=e)
         await asyncio.sleep(10)
         e.remove_field(0)
@@ -94,8 +105,8 @@ class Owner:
         """Run a subprocess using shell."""
         result = await shell(cmd)
         e = discord.Embed(name='Shell', colour=discord.Colour.blurple())
-        e.add_field(name='Input:', value=f'```py\n{cmd}```')
-        e.add_field(name='Output:', value=f'```py\n{result}```')
+        e.add_field(name='Input:', value=f'```cmd\n{cmd}```')
+        e.add_field(name='Output:', value=f'```cmd\n{result}```')
         msg = await ctx.send(embed=e)
         await asyncio.sleep(10)
         e.remove_field(0)
