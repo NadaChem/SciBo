@@ -80,8 +80,9 @@ class Game:
         lowered = message.content.lower()
         if lowered == 'skip':
             self.skip_question = True
+            return True
 
-        return True
+        return lowered == self.answer.lower()
 
     async def get_input(self, start_time):
         while True:
