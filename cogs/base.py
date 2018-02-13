@@ -7,8 +7,6 @@ from utils.paginator import Field
 
 class Base:
     """Basic commands for any bot to have i.e. info, ping, etc"""
-    def __init__(self, bot):
-        bot.remove_command('help')
 
     @commands.command()
     async def info(self, ctx):
@@ -57,4 +55,4 @@ class Base:
 
 
 def setup(bot):
-    bot.add_cog(Base(bot))
+    bot.add_cog(Base())
