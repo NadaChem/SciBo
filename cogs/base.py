@@ -18,7 +18,7 @@ class Base:
         em.add_field(name='Uptime', value=str(datetime.now() - ctx.bot.start_time).split('.')[0])
         em.add_field(name='Ping', value=f'{ctx.bot.latency * 1000:.1f}')
         em.add_field(name='Owners', value='\n'.join(['\u2022 naught0#4417', '\u2022 NCPlayz#7941']))
-        em.add_field(name='Source', value='https://github.com/NadaChem/SciBo')
+        em.add_field(name='Source', value='[On Github](https://github.com/NadaChem/SciBo)')
 
         await ctx.send(embed=em)
 
