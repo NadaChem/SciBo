@@ -16,7 +16,9 @@ class Base:
         em.add_field(name='Commands', value='\n'.join(sorted([f'\u2022 {x.name}' for x in ctx.bot.commands])))
         em.add_field(name='Prefixes', value='\n'.join([f'\u2022 {x}' for x in ctx.bot.prefixes]))
         em.add_field(name='Uptime', value=str(datetime.now() - ctx.bot.start_time).split('.')[0])
+        em.add_field(name='Ping', value=f'{ctx.bot.latency * 1000:.01f}')
         em.add_field(name='Owners', value='\n'.join(['\u2022 naught0#4417', '\u2022 NCPlayz#7941']))
+        em.add_field(name='Source', value='https://github.com/NadaChem/SciBo')
 
         await ctx.send(embed=em)
 
