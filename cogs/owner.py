@@ -9,7 +9,7 @@ import traceback
 
 
 class Owner:
-    """Owner-only commands"""
+    """Owner-only commands."""
 
     def __local_check(self, ctx):
         return ctx.author.id in [142033635443343360, 121678432504512512]
@@ -22,6 +22,7 @@ class Owner:
         return content.strip('` \n')
 
     def get_syntax_error(self, e):
+        """Returns the syntax error in formatted form."""
         if e.text is None:
             return f'```py\n{e.__class__.__name__}: {e}\n```'
         return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
@@ -58,9 +59,9 @@ class Owner:
         else:
             await ctx.message.add_reaction('\N{OK HAND SIGN}')
 
-    @commands.command(name='eval')
+    @commands.command(name='eval', hidden=True)
     async def _eval(self, ctx, *, code: no_codeblock):
-        """Evaluates code"""
+        """Evaluates code."""
 
         code = code.lstrip("`").rstrip("`")
         lines = code.split("\n")
@@ -100,7 +101,7 @@ class Owner:
         e.remove_field(0)
         await msg.edit(embed=e)
 
-    @commands.command(name='sh', typing=True)
+    @commands.command(name='sh', typing=True, hidden=True)
     async def shell(self, ctx, *, cmd: no_codeblock):
         """Run a subprocess using shell."""
         result = await shell(cmd)

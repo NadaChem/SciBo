@@ -2,6 +2,7 @@ import json
 import traceback
 from datetime import datetime
 from pathlib import Path
+from utils.context import SciBoContext
 
 from discord.ext import commands
 
@@ -19,6 +20,7 @@ class SciBo(commands.Bot):
         self.description = 'A scientific bot that does science-y things'
         self.start_time = datetime.now()
         self.startup_cogs = [x.stem for x in Path('cogs').glob('*.py')]
+        self.owners = [142033635443343360, 121678432504512512]
         with open('data/keys.json') as f:
             self.token = json.load(f)['discord']
 
@@ -46,4 +48,5 @@ class SciBo(commands.Bot):
         if message.author.bot:
             return
 
-        await self.process_commands(message)
+        ctx = await self.get_context(message, cls=SciBoContext)
+        await self.invoke(ctx)

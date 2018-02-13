@@ -17,7 +17,7 @@ class Game:
         count: A running tally of how many questions have been asked
         limit: The # of questions to be asked in total (can be None for unlimited)
         task: :meth:`trivia_task`
-        skipped_question (bool): whether to skip a question.
+        skip_question (bool): whether to skip a question.
 
     Args:
         ctx: The context in which the command was called (passed from the cog)
