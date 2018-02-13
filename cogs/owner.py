@@ -1,9 +1,11 @@
-from discord.ext import commands
-import discord
-import traceback
-from utils.misc import shell, no_codeblock
-import inspect
 import asyncio
+import traceback
+import inspect
+
+import discord
+
+from discord.ext import commands
+from utils.misc import shell, no_codeblock
 
 
 class Owner:
