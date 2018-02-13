@@ -1,10 +1,11 @@
-from discord.ext import commands
 import discord
-from utils.misc import shell, no_codeblock
+from discord.ext import commands
 import asyncio
-import traceback
+
+from utils.misc import shell, no_codeblock
 from io import StringIO
 import contextlib
+import traceback
 
 
 class Owner:
