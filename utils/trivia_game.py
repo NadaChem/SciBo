@@ -91,7 +91,7 @@ class Game:
                 await self.ctx.send(f'Skipped! The answer was `{self.answer}`')
                 break
 
-            if message.lower() == self.answer.lower():
+            if message.content.lower() == self.answer.lower():
                 await self.ctx.send(f'Correct! {message.author.mention} The answer was `{self.answer}`.')
                 break
 
