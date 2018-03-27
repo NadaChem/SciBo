@@ -88,6 +88,7 @@ class Game:
 
             if self.skip_question:
                 await self.ctx.send(f'Skipped! The answer was `{self.answer}`')
+                self.skip_question = False
                 break
 
             if message.content.lower() == self.answer.lower():
