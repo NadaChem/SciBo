@@ -81,8 +81,6 @@ class Game:
             self.skip_question = True
             return True
 
-        return lowered == self.answer.lower()
-
     async def get_input(self, start_time):
         while True:
             message = await self.bot.wait_for('message', check=self.check)
